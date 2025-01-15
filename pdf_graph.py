@@ -9,7 +9,6 @@ from openai import OpenAI
 from langgraph.graph import START, END, StateGraph
 from langchain_core.runnables import RunnableConfig
 from langgraph.checkpoint.memory import MemorySaver
-from IPython.display import Image, display
 
 import streamlit as st
 import os
