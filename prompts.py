@@ -26,3 +26,7 @@ And please advise the user to only upload pdfs which are related to IBD.
 And please suggest some hot topics about IBD to the user.
 
 """
+
+
+
+ANSWER_INSTRUCTIONS = """"""

@@ -90,6 +90,18 @@ def conditional_checker(state: BotState):
 
     return "guidelines_generator"
 
+# give extracted content from pdf in pdf graph
+# def answer_generator(state: BotState, config: RunnableConfig):
+#     searched_context = state["context"]
+#     messages = state["messages"]
+
+#     # generate the prompt as a system message
+#     system_message_prompt = [SystemMessage(ANSWER_INSTRUCTIONS.format(context = searched_context ))]
+#     # invoke the llm
+#     answer = llm.invoke(system_message_prompt + messages, config)
+
+#     return {"answer": answer}
+
 # add nodes and edges
 helper_builder = StateGraph(BotState)
 helper_builder.add_node("pdf_text_extractor", pdf_data_extractor)
