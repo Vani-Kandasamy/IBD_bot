@@ -50,17 +50,16 @@ if uploaded_file:
     #     st.write(get_content["content"])
 
 for message in st.session_state.messages:
-    with st.chat_message(message["role"]):
-        st.markdown(message["content"])
+        with st.chat_message(message["role"]):
+            st.markdown(message["content"])
 
-# input from the user
-if prompt := st.chat_input("What is up?"):
-    st.session_state.messages.append({"role": "user", "content": prompt})
-    with st.chat_message("user"):
-        st.markdown(prompt)
+    if prompt := st.chat_input("What is up?"):
+        st.session_state.messages.append({"role": "user", "content": prompt})
+        with st.chat_message("user"):
+            st.markdown(prompt)
 
-    # content manager for displaying appropriate message
-    with st.chat_message("assistant"):
-        message_list = message_creator(st.session_state.messages)
-        response = st.write_stream(graph_streamer(PDF_NAME, message_list))
-    st.session_state.messages.append({"role": "assistant", "content": response})
+        with st.chat_message("assistant"):
+            message_list = message_creator(st.session_state.messages)
+            print("Message List", message_list)
+            response = st.write_stream(graph_streamer(PDF_NAME, message_list))
+        st.session_state.messages.append({"role": "assistant", "content": response})
