@@ -13,6 +13,7 @@ from langgraph.checkpoint.memory import MemorySaver
 import streamlit as st
 import os
 import base64
+import PyPDF2
 
 os.environ["LANGCHAIN_TRACING_V2"] = st.secrets["LANGCHAIN_TRACING_V2"]
 os.environ["LANGCHAIN_API_KEY"] = st.secrets["LANGCHAIN_API_KEY"]
