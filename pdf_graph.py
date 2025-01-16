@@ -90,28 +90,44 @@ def conditional_checker(state: BotState):
     return "guidelines_generator"
 
 # give extracted content from pdf in pdf graph
-# def answer_generator(state: BotState, config: RunnableConfig):
-#     searched_context = state["context"]
-#     messages = state["messages"]
+def answer_generator(state: BotState, config: RunnableConfig):
+    pdf_context = state["content"]
+    messages = state["messages"]
 
-#     # generate the prompt as a system message
-#     system_message_prompt = [SystemMessage(ANSWER_INSTRUCTIONS.format(context = searched_context ))]
-#     # invoke the llm
-#     answer = llm.invoke(system_message_prompt + messages, config)
+    # generate the prompt as a system message
+    system_message_prompt = [SystemMessage(pt.ANSWER_INSTRUCTIONS.format(context = pdf_context ))]
+    # invoke the llm
+    answer = llm.invoke(system_message_prompt + messages, config)
 
-#     return {"answer": answer}
+    return {"answer": answer}
 
 # add nodes and edges
 helper_builder = StateGraph(BotState)
 helper_builder.add_node("pdf_text_extractor", pdf_data_extractor)
 helper_builder.add_node("ibd_tester", ibd_tester)
 helper_builder.add_node("guidelines_generator", user_guider)
+helper_builder.add_node("answer_generator", answer_generator)
 
 # build graph
 helper_builder.add_edge(START, "pdf_text_extractor")
 helper_builder.add_edge("pdf_text_extractor", "ibd_tester")
-helper_builder.add_conditional_edges("ibd_tester", conditional_checker, [END, "guidelines_generator"])
+helper_builder.add_conditional_edges("ibd_tester", conditional_checker, ["answer_generator", "guidelines_generator"])
 helper_builder.add_edge("guidelines_generator", END)
+helper_builder.add_edge("answer_generator", END)
+
 
 # compile the graph
 helper_graph = helper_builder.compile()
+
+async def graph_streamer(pdf_path: str, user_query: str):
+    node_to_stream = 'answer_generator'
+    other_node_to_stream = 'guidelines_generator'
+    model_config = {"configurable": {"thread_id": "1"}}
+
+    async for event in helper_graph.astream_events({"pdf_path": pdf_path, "messages": user_query}, model_config, version="v2"):
+        # Get chat model tokens from a particular node
+
+        if event["event"] == "on_chat_model_stream":
+            if event['metadata'].get('langgraph_node','') == node_to_stream or event['metadata'].get('langgraph_node','') == other_node_to_stream:
+                data = event["data"]
+                yield data["chunk"].content
