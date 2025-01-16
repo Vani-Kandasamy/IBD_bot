@@ -1,5 +1,6 @@
 import streamlit as st
 from pdf_graph import graph_streamer, extract_text_from_pdf, helper_graph
+from langchain_core.messages import AIMessage, HumanMessage
 
 PDF_NAME = "pdfchatuploaded.pdf"
 
