@@ -27,29 +27,11 @@ if "messages" not in st.session_state:
 uploaded_file = st.file_uploader("Upload a PDF file", type="pdf", on_change=empty_message_list)
 
 if uploaded_file:
-    # save the file
+    # save the pdf
     with open(PDF_NAME, "wb") as f:
         f.write(uploaded_file.getbuffer())
 
-    # read the texts and display
-    # extract_data = extract_text_from_pdf(PDF_NAME)
-    # # disply the pdf
-    # st.subheader("Extracted Data")
-    # st.markdown(extract_data)
-
-    # # check pdf related to IBD or not
-    # # execute the graph
-    # with st.spinner("Analysing............"):
-    #     get_content = helper_graph.invoke({"pdf_path": PDF_NAME})
-    # # display content
-    # if get_content["accept_content"]:
-    #     st.subheader("PDF Information")
-    #     st.write(get_content["content"])
-    # else:
-    #     st.subheader("Ooopss!! Not Related to IBD!")
-    #     st.write(get_content["content"])
-
-for message in st.session_state.messages:
+    for message in st.session_state.messages:
         with st.chat_message(message["role"]):
             st.markdown(message["content"])
 
@@ -63,3 +45,4 @@ for message in st.session_state.messages:
             print("Message List", message_list)
             response = st.write_stream(graph_streamer(PDF_NAME, message_list))
         st.session_state.messages.append({"role": "assistant", "content": response})
+    
