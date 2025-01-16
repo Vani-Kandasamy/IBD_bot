@@ -122,14 +122,17 @@ helper_builder.add_edge("answer_generator", END)
 helper_graph = helper_builder.compile()
 
 async def graph_streamer(pdf_path: str, user_query: str):
+    # nodes to stream
+    # two nodes are there because we are conditionally streaming
     node_to_stream = 'answer_generator'
     other_node_to_stream = 'guidelines_generator'
+    # set thread for configuration
     model_config = {"configurable": {"thread_id": "1"}}
 
     async for event in helper_graph.astream_events({"pdf_path": pdf_path, "messages": user_query}, model_config, version="v2"):
         # Get chat model tokens from a particular node
-
+        #print(event)
         if event["event"] == "on_chat_model_stream":
-            if event['metadata'].get('langgraph_node','') == node_to_stream or event['metadata'].get('langgraph_node','') == other_node_to_stream:
+            if event['metadata'].get('langgraph_node','') == node_to_stream or  event['metadata'].get('langgraph_node','') == other_node_to_stream:
                 data = event["data"]
                 yield data["chunk"].content
