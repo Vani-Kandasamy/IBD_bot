@@ -19,7 +19,7 @@ else:
     st.html(f"Hello, <span style='color: orange; font-weight: bold;'>{st.experimental_user.name}</span>!")
     
     # Documentation for each key
-    selected_keys = ['email', 'name', 'picture','iat','exp']
+    selected_keys = ['email', 'name', 'picture']
     filtered_data = {key: st.experimental_user.get(key) for key in selected_keys}
     st.subheader("User Information", divider=True)
     # Create the DataFrame
