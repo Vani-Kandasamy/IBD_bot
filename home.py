@@ -32,7 +32,7 @@ else:
    
 
     # Display the DataFrame in Streamlit
-    st.dataframe(df, height=600, hide_index=True)
+    st.dataframe(df, hide_index=True)
 
     if st.button("Log out", type="secondary", icon=":material/logout:"):
         st.logout()
