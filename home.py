@@ -24,6 +24,7 @@ else:
         "name": "The user's full name.",
         "picture": "URL of the user's profile picture.",
         "iat": "Issued At Time - the time the ID Token was issued."
+        "exp": "Expiration Time - the time the ID Token expires."
     }
 
     # Function to convert timestamp to human-readable format
