@@ -20,10 +20,16 @@ else:
     
     # Documentation for each key
     selected_keys = ['email', 'name', 'picture']
-    filtered_data = {key: st.experimental_user.get(key) for key in selected_keys}
+    # Extract the key-value pairs from the dictionary
+    selected_data = {key: st.experimental_user[key] for key in selected_keys}
+
+    # Convert the dictionary to a DataFrame
+    df = pd.DataFrame([selected_data])
+
+    
     st.subheader("User Information", divider=True)
     # Create the DataFrame
-    df = pd.DataFrame(filtered_data)
+   
 
     # Display the DataFrame in Streamlit
     st.dataframe(df, height=600, hide_index=True)
