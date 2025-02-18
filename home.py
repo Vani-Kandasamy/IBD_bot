@@ -39,8 +39,8 @@ else:
     for key, value in st.experimental_user.items():
         if key in ["iat", "exp"]:
             value = format_timestamp(value)  # Convert timestamps to human-readable format
-        description = key_descriptions.get(key, "No description available.")
-        data.append({"Key": key, "Value": value, "Description": description})
+        #description = key_descriptions.get(key, "No description available.")
+        data.append({"Key": key, "Value": value})
 
     st.subheader("User Information", divider=True)
     # Create the DataFrame
