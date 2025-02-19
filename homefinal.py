@@ -3,6 +3,8 @@ import streamlit as st
 from datetime import datetime
 import authlib
 
+from streamlit_app import app_main
+
 
 IMAGE_ADDRESS = "https://aboutibs.org/wp-content/uploads/sites/13/Diet-and-IBS-768x512.jpg"
 
