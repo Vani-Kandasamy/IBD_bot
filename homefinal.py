@@ -17,7 +17,7 @@ st.image(IMAGE_ADDRESS, caption = "IBD Nutrition Importance")
 def main_code():
     
     # Documentation for each key
-    selected_keys = ['email', 'name', 'picture']
+    selected_keys = ['email', 'name']
     # Extract the key-value pairs from the dictionary
     selected_data = {key: st.experimental_user[key] for key in selected_keys}
 
