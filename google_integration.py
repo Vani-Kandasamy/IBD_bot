@@ -8,46 +8,53 @@ def get_google_cloud_credentials(jstring:str):
     credentials = service_account.Credentials.from_service_account_info(credentials_dict)   
     return credentials
 
-    
-def fetch_prompts(credentials):
-    db = firestore.Client(credentials=credentials)
-    collection_ref = db.collection(u'test_prompts')
-    #query = collection_ref.where('status', '==', 'transcripted')
-    docs = collection_ref.stream()
-    
-    # Collect document IDs that match the query
-    results = [{'id': doc.id, **doc.to_dict()} for doc in docs]
-    return results
+def get_user_details(db, user_email):
+    # Reference the user's document in Firestore by email
+    doc_ref = db.collection('users').document(user_email)
 
-def fetch_prompt_by_name(credentials,name):
-    db = firestore.Client(credentials=credentials)
-    collection_ref = db.collection(u'test_prompts')
-    query = collection_ref.where('prompt_name', '==', name)
-    docs = query.stream()
-    
-    # Collect document IDs that match the query
-    results = [{'id': doc.id, **doc.to_dict()} for doc in docs]
-    return results
+    try:
+        # Get the document
+        user_doc = doc_ref.get()
+        if user_doc.exists:
+            # Print or utilize the user's details
+            user_details = user_doc.to_dict()
+            print(f"User details for {user_email}:")
+            for key, value in user_details.items():
+                print(f"{key}: {value}")
+            return user_details
+        else:
+            print(f"No such user with email: {user_email}")
+            return None
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return None
 
-def add_prompt(credentials, prompt_name, new_value):
-    db = firestore.Client(credentials=credentials)
-    collection_ref = db.collection(u'test_prompts').document() 
-    collection_ref.set({
-        u'prompt_name': prompt_name,
-        u'prompt_value': new_value
-    })
+def update_user_document(db, user_email, user_name, user_query, bot_response):
+    # Reference the user's document in Firestore by email
+    doc_ref = db.collection('users').document(user_email)
 
-def update_prompt_by_name(credentials, prompt_name, new_value):
-    res=fetch_prompt_by_name(credentials,prompt_name)
-    if(len(res)==0):
-        add_prompt(credentials, prompt_name, new_value)
-        return "Found no match. Adding."
-    elif len(res)==1:
-        document_id=res[0].get('id')
-        db = firestore.Client(credentials=credentials)
-        collection_ref = db.collection(u'test_prompts')
-        document_ref = collection_ref.document(document_id)
-        document_ref.update({'prompt_value': new_value})
-        return f"Found one match {res}. Document {document_id} updated: prompt to {new_value}"
-    else:
-        return f"Found multiple matches {res}. Not updating"
+    # Prepare interaction data with timestamp
+    timestamp = datetime.utcnow()
+    interaction_record = {
+        'query': user_query,
+        'response': bot_response,
+        'timestamp': timestamp
+    }
+
+    try:
+        # Update the document with the current interaction
+        doc_ref.update({
+            'name': user_name,
+            'query': user_query,
+            'response': bot_response,
+            'queries_log': firestore.ArrayUnion([interaction_record])
+        })
+    except firestore.NotFound:
+        # If the user document does not exist, create it
+        doc_ref.set({
+            'email': user_email,
+            'name': user_name,
+            'query': user_query,
+            'response': bot_response,
+            'queries_log': [interaction_record]
+        })
