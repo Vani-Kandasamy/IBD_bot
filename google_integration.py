@@ -2,6 +2,7 @@ from google.cloud import firestore
 from google.oauth2 import service_account
 from datetime import datetime
 from google.api_core.exceptions import NotFound
+from tabulate import tabulate
 
 
 def get_google_cloud_credentials(service_account_info):
