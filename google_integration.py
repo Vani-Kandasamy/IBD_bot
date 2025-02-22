@@ -1,6 +1,6 @@
 from google.cloud import firestore
 from google.oauth2 import service_account
-import datetime
+from datetime import datetime
 
 import json
 
