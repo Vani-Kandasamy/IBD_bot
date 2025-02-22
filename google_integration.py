@@ -1,8 +1,8 @@
 from google.cloud import firestore
 from google.oauth2 import service_account
 from datetime import datetime
+from google.api_core.exceptions import NotFound
 
-import json
 
 def get_google_cloud_credentials(service_account_info):
     #service_account_info = st.secrets["gcp_service_account"]
@@ -50,7 +50,7 @@ def update_user_document(db, user_email, user_name, user_query, bot_response):
             'response': bot_response,
             'queries_log': firestore.ArrayUnion([interaction_record])
         })
-    except firestore.NotFound:
+    except NotFound:
         # If the user document does not exist, create it
         doc_ref.set({
             'email': user_email,
