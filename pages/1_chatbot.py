@@ -32,7 +32,7 @@ def get_db(credentials):
     db = firestore.Client(credentials=credentials)
     return db
 
-def display(db):
+def display(db,email):
     # Retrieve user details from Firestore
     user_details = get_user_details(db, user_email)
     if user_details:
@@ -85,7 +85,7 @@ def main_code():
     with tabs[1]:   
         st.subheader("Your Data")
         if st.experimental_user.is_logged_in:
-            display(db)
+            display(db,user_email)
         else:
             st.warning("You must log in to access this tab.")
 
