@@ -8,3 +8,4 @@ pypdf2
 authlib
 google-cloud-firestore
 google-auth
+tabulate
