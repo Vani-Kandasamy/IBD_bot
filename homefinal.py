@@ -3,8 +3,6 @@ import streamlit as st
 from datetime import datetime
 import authlib
 
-
-
 from google_integration import get_google_cloud_credentials, get_user_details, update_user_document
 import pandas as pd 
 
