@@ -10,6 +10,11 @@ from langgraph.graph import START, END, StateGraph
 from langchain_core.runnables import RunnableConfig
 from langgraph.checkpoint.memory import MemorySaver
 
+from google_integration import get_google_cloud_credentials, get_user_details, update_user_document, get_user_field
+import pandas as pd 
+from google.cloud import firestore
+
+
 import streamlit as st
 import os
 
@@ -61,8 +66,27 @@ def format_logs_for_context(query_logs):
 
     return "\n".join(formatted_logs)
 
+def set_up_credentials():
+    if 'credentials' not in st.session_state:
+        service_account_info = st.secrets["gcp_service_account"]
+        credentials = get_google_cloud_credentials(service_account_info)
+        st.session_state['credentials']=credentials
+    return st.session_state['credentials']
+
+def get_db(credentials):
+    # Initialize the Firestore client using credentials
+    #credentials = set_up_credentials()
+    db = firestore.Client(credentials=credentials)
+    return db
+
+creds=set_up_credentials()
+db = get_db(creds)
+
+user_email = st.experimental_user["email"]
+
 # Retrieve query logs for the user
 query_logs = get_user_field(db, user_email)
+
 logs_text = format_logs_for_context(query_logs)
 
 # Combine logs and knowledge context
