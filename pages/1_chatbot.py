@@ -47,36 +47,36 @@ def main_code():
         st.subheader("User Information")
         st.write(user_details)
 
-# set the title
-st.title("GastroGuide")
-# set the image
-st.image(IMAGE_ADDRESS, caption = 'IBS Disease Supporter')
+    # set the title
+    st.title("GastroGuide")
+    # set the image
+    st.image(IMAGE_ADDRESS, caption = 'IBS Disease Supporter')
 
-st.subheader("Chat with Us 🤖")
+    st.subheader("Chat with Us 🤖")
 
 
-if "messages" not in st.session_state:
-    st.session_state.messages = []
+    if "messages" not in st.session_state:
+        st.session_state.messages = []
 
-for message in st.session_state.messages:
-    with st.chat_message(message["role"]):
-        st.markdown(message["content"])
+    for message in st.session_state.messages:
+        with st.chat_message(message["role"]):
+            st.markdown(message["content"])
 
-# input from the user
-if prompt := st.chat_input("What is up?"):
-    st.session_state.messages.append({"role": "user", "content": prompt})
-    with st.chat_message("user"):
-        st.markdown(prompt)
+    # input from the user
+    if prompt := st.chat_input("What is up?"):
+        st.session_state.messages.append({"role": "user", "content": prompt})
+        with st.chat_message("user"):
+            st.markdown(prompt)
 
-    # content manager for displaying appropriate message
-    with st.chat_message("assistant"):
-        message_list = message_creator(st.session_state.messages)
-        print("Message List", message_list)
-        response = st.write_stream(graph_streamer(message_list))
-    st.session_state.messages.append({"role": "assistant", "content": response})
+        # content manager for displaying appropriate message
+        with st.chat_message("assistant"):
+            message_list = message_creator(st.session_state.messages)
+            print("Message List", message_list)
+            response = st.write_stream(graph_streamer(message_list))
+        st.session_state.messages.append({"role": "assistant", "content": response})
 
-    # Assuming user_email and user_name are set correctly in session
-    update_user_document(db, user_email, user_name, prompt, response)
+        # Assuming user_email and user_name are set correctly in session
+        update_user_document(db, user_email, user_name, prompt, response)
 
 if __name__ == "__main__":
     main_code()
