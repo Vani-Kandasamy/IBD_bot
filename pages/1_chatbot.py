@@ -84,7 +84,7 @@ def main_code():
 
     with tabs[1]:   
         st.subheader("Your Data")
-        if st.experimental_user.is_logged_in
+        if st.experimental_user.is_logged_in:
             display(db)
         else:
             st.warning("You must log in to access this tab.")
