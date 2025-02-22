@@ -62,7 +62,7 @@ def format_logs_for_context(query_logs):
     return "\n".join(formatted_logs)
 
 # Retrieve query logs for the user
-query_logs = get_query_logs(db, user_email)
+query_logs = get_user_field(db, user_email)
 logs_text = format_logs_for_context(query_logs)
 
 # Combine logs and knowledge context
