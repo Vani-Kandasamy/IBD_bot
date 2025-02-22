@@ -23,16 +23,17 @@ def get_user_field(db, user_email, field_name='queries_log'):
 
             # Check if the requested field exists in the document
             if field_name in user_details:
+                # Retrieve and return the specific field value
+                field_value = user_details[field_name]
                 # Display the result in table format
                 table = [["Field", "Value"],
                          [field_name, field_value]]
                 print(tabulate(table, headers="firstrow", tablefmt="grid"))
 
                 return field_value
-                # Retrieve and return the specific field value
-                field_value = user_details[field_name]
-                print(f"Field '{field_name}' for user {user_email}: {field_value}")
-                return field_value
+                
+                #print(f"Field '{field_name}' for user {user_email}: {field_value}")
+                #return field_value
             else:
                 # If the field does not exist, inform the user
                 print(f"The field '{field_name}' does not exist for user {user_email}.")
