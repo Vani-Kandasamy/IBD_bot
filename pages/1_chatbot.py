@@ -85,7 +85,8 @@ def main_code():
     with tabs[1]:   
         st.subheader("Your Data")
         if st.experimental_user.is_logged_in:
-            display(db,user_email)
+            email = st.experimental_user["email"]
+            display(db, email)
         else:
             st.warning("You must log in to access this tab.")
 
