@@ -4,6 +4,7 @@ from text_graph import graph_streamer
 from langchain_core.messages import AIMessage, HumanMessage
 from google_integration import get_google_cloud_credentials, get_user_details, update_user_document
 import pandas as pd 
+from google.cloud import firestore
 
 
 IMAGE_ADDRESS = "https://upload.wikimedia.org/wikipedia/commons/1/1a/Irritable_bowel_syndrome.jpg"
