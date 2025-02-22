@@ -18,6 +18,34 @@ def message_creator(list_of_messages: list) -> list:
 
     return prompt_messages
 
+def set_up_credentials():
+    if 'credentials' not in st.session_state:
+        jstr = st.secrets.get('GOOGLE_KEY')
+        credentials = get_google_cloud_credentials(jstr)
+        st.session_state['credentials']=credentials
+    return st.session_state['credentials']
+
+def get_db(credentials):
+    # Initialize the Firestore client using credentials
+    #credentials = set_up_credentials()
+    db = firestore.Client(credentials=credentials)
+    return db
+
+def main_code():
+    
+    creds=set_up_credentials()
+    db = get_db(creds)
+
+    # Assuming 'st.experimental_user' is a valid object with user details
+    user_email = st.experimental_user["email"]
+    user_name = st.experimental_user["name"]
+
+    # Retrieve user details from Firestore
+    user_details = get_user_details(db, user_email)
+    if user_details:
+        st.subheader("User Information")
+        st.write(user_details)
+
 # set the title
 st.title("GastroGuide")
 # set the image
@@ -46,28 +74,10 @@ if prompt := st.chat_input("What is up?"):
         response = st.write_stream(graph_streamer(message_list))
     st.session_state.messages.append({"role": "assistant", "content": response})
 
-def set_up_credentials():
-    if 'credentials' not in st.session_state:
-        jstr = st.secrets.get('GOOGLE_KEY')
-        credentials = get_google_cloud_credentials(jstr)
-        st.session_state['credentials']=credentials
-    return st.session_state['credentials']
+    # Assuming user_email and user_name are set correctly in session
+    update_user_document(db, user_email, user_name, prompt, response)
 
-def main_code():
-    
-    creds=set_up_credentials()
-    # Documentation for each key
-    selected_keys = ['email', 'name']
-    # Extract the key-value pairs from the dictionary
-    selected_data = {key: st.experimental_user[key] for key in selected_keys}
+if __name__ == "__main__":
+    main_code()
 
-    # Convert the dictionary to a DataFrame
-    df = pd.DataFrame([selected_data])
 
-    
-    st.subheader("User Information", divider=True)
-    # Create the DataFrame
-   
-
-    # Display the DataFrame in Streamlit
-    st.dataframe(df, hide_index=True)
