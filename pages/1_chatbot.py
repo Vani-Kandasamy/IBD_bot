@@ -2,7 +2,7 @@ from openai import OpenAI
 import streamlit as st
 from text_graph import graph_streamer
 from langchain_core.messages import AIMessage, HumanMessage
-from google_integration import get_google_cloud_credentials, get_user_details, update_user_document
+from google_integration import get_google_cloud_credentials, get_user_details, update_user_document, get_user_field
 import pandas as pd 
 from google.cloud import firestore
 
@@ -34,7 +34,8 @@ def get_db(credentials):
 
 def display(db,email):
     # Retrieve user details from Firestore
-    user_details = get_user_details(db, email)
+    #user_details = get_user_details(db, email)
+    user_details = get_user_field(db, email)
     if user_details:
         #st.subheader("User Information")
         st.write(user_details)

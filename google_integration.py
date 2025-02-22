@@ -9,6 +9,34 @@ def get_google_cloud_credentials(service_account_info):
     credentials = service_account.Credentials.from_service_account_info(service_account_info)
     return credentials
 
+def get_user_field(db, user_email, field_name='queries_log'):
+    # Reference the user's document in Firestore by email
+    doc_ref = db.collection('users').document(user_email)
+
+    try:
+        # Get the document
+        user_doc = doc_ref.get()
+        if user_doc.exists:
+            # Convert the document to a dictionary
+            user_details = user_doc.to_dict()
+
+            # Check if the requested field exists in the document
+            if field_name in user_details:
+                # Retrieve and return the specific field value
+                field_value = user_details[field_name]
+                print(f"Field '{field_name}' for user {user_email}: {field_value}")
+                return field_value
+            else:
+                # If the field does not exist, inform the user
+                print(f"The field '{field_name}' does not exist for user {user_email}.")
+                return None
+        else:
+            print(f"No such user with email: {user_email}")
+            return None
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return None
+
 def get_user_details(db, user_email):
     # Reference the user's document in Firestore by email
     doc_ref = db.collection('users').document(user_email)
