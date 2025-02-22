@@ -82,9 +82,7 @@ def main_code():
             # Assuming user_email and user_name are set correctly in session
             update_user_document(db, user_email, user_name, prompt, response)
 
-        login()
-
-    with tabs[1]:
+    with tabs[1]:   
         st.subheader("Your Data")
         if st.session_state.get('logged_in'):
             display(db)
