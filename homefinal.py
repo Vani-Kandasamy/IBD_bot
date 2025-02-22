@@ -5,6 +5,8 @@ import authlib
 
 from streamlit_app import app_main
 
+from google_integration import get_google_cloud_credentials, get_user_details, update_user_document
+import pandas as pd 
 
 IMAGE_ADDRESS = "https://aboutibs.org/wp-content/uploads/sites/13/Diet-and-IBS-768x512.jpg"
 
@@ -13,9 +15,16 @@ st.title("IBD Control Helper")
 
 st.image(IMAGE_ADDRESS, caption = "IBD Nutrition Importance")
 
+def set_up_credentials():
+    if 'credentials' not in st.session_state:
+        jstr = st.secrets.get('GOOGLE_KEY')
+        credentials = get_google_cloud_credentials(jstr)
+        st.session_state['credentials']=credentials
+    return st.session_state['credentials']
 
 def main_code():
     
+    creds=set_up_credentials()
     # Documentation for each key
     selected_keys = ['email', 'name']
     # Extract the key-value pairs from the dictionary
