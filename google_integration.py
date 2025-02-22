@@ -3,9 +3,9 @@ from google.oauth2 import service_account
 
 import json
 
-def get_google_cloud_credentials(jstring:str):
-    credentials_dict=json.loads(jstring)
-    credentials = service_account.Credentials.from_service_account_info(credentials_dict)   
+def get_google_cloud_credentials(service_account_info):
+    #service_account_info = st.secrets["gcp_service_account"]
+    credentials = service_account.Credentials.from_service_account_info(service_account_info)
     return credentials
 
 def get_user_details(db, user_email):

@@ -20,8 +20,8 @@ def message_creator(list_of_messages: list) -> list:
 
 def set_up_credentials():
     if 'credentials' not in st.session_state:
-        jstr = st.secrets.get('GOOGLE_KEY')
-        credentials = get_google_cloud_credentials(jstr)
+        service_account_info = st.secrets["gcp_service_account"]
+        credentials = get_google_cloud_credentials(service_account_info)
         st.session_state['credentials']=credentials
     return st.session_state['credentials']
 
