@@ -31,9 +31,6 @@ def get_user_field(db, user_email, field_name='queries_log'):
                 print(tabulate(table, headers="firstrow", tablefmt="grid"))
 
                 return field_value
-                
-                #print(f"Field '{field_name}' for user {user_email}: {field_value}")
-                #return field_value
             else:
                 # If the field does not exist, inform the user
                 print(f"The field '{field_name}' does not exist for user {user_email}.")

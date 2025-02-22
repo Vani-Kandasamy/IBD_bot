@@ -13,6 +13,8 @@ from langgraph.checkpoint.memory import MemorySaver
 import streamlit as st
 import os
 
+from google_integration import get_user_field
+
 os.environ["LANGCHAIN_TRACING_V2"] = st.secrets["LANGCHAIN_TRACING_V2"]
 os.environ["LANGCHAIN_API_KEY"] = st.secrets["LANGCHAIN_API_KEY"]
 os.environ["LANGCHAIN_ENDPOINT"] = st.secrets["LANGCHAIN_ENDPOINT"]
@@ -24,30 +26,47 @@ os.environ["INDEX_HOST"]= st.secrets["INDEX_HOST"]
 # constants
 TEXT_MODEL = "text-embedding-ada-002"
 NAMESPACE_KEY = "Keya"
-ANSWER_INSTRUCTIONS = """ You are an expert nutritionist for IBD patients.
+ANSWER_INSTRUCTIONS = """
+You are an expert nutritionist specializing in advising IBD patients.
 
-You are an expert being answered based on given context.
+Your responses are generated based on a combination of knowledge base and user query logs retrieved from the Firestore database.
 
-You goal is to answer a question posed by the user.
+Your goal is to answer the question posed by the user effectively and accurately.
 
-Use the folowing guidenlines to answer user questions.
+Follow these guidelines when interacting with the user:
 
-1. First check whether user is asking a question or greeting.
+1. Determine whether the user's input is a question or a greeting.
+   - If it's a greeting, respond with an appropriate and friendly greeting.
 
-2. If it is a greeting, please greet appropriately.
+2. If the user's input is a question, follow these steps to provide your answer:
+   - Retrieve relevant context from the knowledge base and query logs in Firestore.
+   - Use only the information provided within these sources to form your response.
 
-3. If not please answer the question using below guidelines.
+When answering questions:
 
-To answer question, use this context:
-
-{context}
-
-When answering questions, follow these guidelines:
-
-1. Use only the information provided in the context.
-
-2. Do not introduce external information or make assumptions beyond what is explicitly stated in the context.
+1. Base your response solely on the context retrieved.
+2. Do not introduce external information or assumptions beyond what is explicitly provided.
+3. Ensure clarity and empathy in your communication, aligning with your role as an expert advisor.
 """
+
+def format_logs_for_context(query_logs):
+    # Convert logs to a string format suitable for context
+    if not query_logs:
+        return "No recent user queries found."
+
+    formatted_logs = ["Recent User Queries:"]
+    for log in query_logs:
+        # Assuming each log contains a 'query' and 'timestamp'
+        formatted_logs.append(f"- {log['timestamp']}: {log['query']}")
+
+    return "\n".join(formatted_logs)
+
+# Retrieve query logs for the user
+query_logs = get_query_logs(db, user_email)
+logs_text = format_logs_for_context(query_logs)
+
+# Combine logs and knowledge context
+ANSWER_INSTRUCTIONS = f"{logs_text}\n{ANSWER_INSTRUCTIONS}"
 
 # set the openai model
 llm = ChatOpenAI(model="gpt-4o", temperature=0)
@@ -114,7 +133,7 @@ def answer_generator(state: BotState, config: RunnableConfig):
     messages = state["messages"]
 
     # generate the prompt as a system message
-    system_message_prompt = [SystemMessage(ANSWER_INSTRUCTIONS.format(context = searched_context ))]
+    system_message_prompt = [SystemMessage(ANSWER_INSTRUCTIONS.format(context = searched_context))]
     # invoke the llm
     answer = llm.invoke(system_message_prompt + messages, config)
 
