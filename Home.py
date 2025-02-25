@@ -22,7 +22,7 @@ if not st.experimental_user.is_logged_in:
         st.login()
 else:
     # Display user name
-    st.html(f"Hello, <span style='color: orange; font-weight: bold;'>{st.user.name}</span>!")
+    st.html(f"Hello, <span style='color: orange; font-weight: bold;'>{st.experimental_user.name}</span>!")
     
     if st.sidebar.button("Log out", type="secondary", icon=":material/logout:"):
         st.logout()
