@@ -21,7 +21,7 @@ def pdf_bot():
     st.subheader("Chat with Us 🤖")
 
     def empty_message_list():
-    st.session_state.messages = []
+        st.session_state.messages = []
 
     if "messages" not in st.session_state:
         st.session_state.messages = []
