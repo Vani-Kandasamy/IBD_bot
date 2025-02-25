@@ -2,9 +2,9 @@ import pandas as pd
 import streamlit as st
 from datetime import datetime
 import authlib
-import 1_chatbot
-import 2_imagebot
-import 3_pdfbot
+import chatbot
+import imagebot
+import pdfbot
 
 from google_integration import get_google_cloud_credentials, get_user_details, update_user_document
 import pandas as pd 
@@ -28,16 +28,16 @@ else:
         st.logout()
 
 with st.container():
-        tab1, tab2, tab3 = st.tabs(["Home", "Nutrition", "Profile"])
+        tab1, tab2, tab3 = st.tabs(["ChatBot", "ImageBot", "PDFBot"])
 
         # Use imported display functions in each tab
         with tab1:
-            home.display_home()
+            chatbot.chat_bot()
 
         with tab2:
-            nutrition.display_nutrition()
+            imagebot.image_bot()
 
         with tab3:
-            profile.display_profile()
+            pdfbot.pdf_bot()
 
 
