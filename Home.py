@@ -27,7 +27,7 @@ else:
     if st.sidebar.button("Log out", type="secondary", icon=":material/logout:"):
         st.logout()
 
-with st.container():
+    with st.container():
         tab1, tab2, tab3 = st.tabs(["ChatBot", "ImageBot", "PDFBot"])
 
         # Use imported display functions in each tab
