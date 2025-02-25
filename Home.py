@@ -16,7 +16,7 @@ st.title("IBD Control Helper")
 
 st.image(IMAGE_ADDRESS, caption = "IBD Nutrition Importance")
 
-if not st.user.is_logged_in:
+if not st.experimental_user.is_logged_in:
     st.warning("Please log in to access the services.")
     if st.sidebar.button("Log in with Google", type="primary", icon=":material/login:"):
         st.login()

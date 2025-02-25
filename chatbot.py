@@ -44,8 +44,8 @@ def chat_bot():
     creds=set_up_credentials()
     db = get_db(creds)
     # Assuming 'st.experimental_user' is a valid object with user details
-    user_email = st.user["email"]
-    user_name = st.user["name"]
+    user_email = st.experimental_user["email"]
+    user_name = st.experimental_user["name"]
         
     # set the title
     st.title("GastroGuide")
@@ -83,7 +83,7 @@ def chat_bot():
 
     with tabs[1]:   
         st.subheader("Your Data")
-        if st.user.is_logged_in:
+        if st.experimental_user.is_logged_in:
             #email = st.experimental_user["email"]
             display(db, user_email)
         else:
