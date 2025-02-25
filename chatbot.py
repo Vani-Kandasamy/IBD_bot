@@ -40,56 +40,60 @@ def chat_bot():
         if user_details:
             #st.subheader("User Information")
             st.write(user_details)
-
-    def main_code():
+    
+    creds=set_up_credentials()
+    db = get_db(creds)
+    # Assuming 'st.experimental_user' is a valid object with user details
+    user_email = st.experimental_user["email"]
+    user_name = st.experimental_user["name"]
         
-        creds=set_up_credentials()
-        db = get_db(creds)
+    # set the title
+    st.title("GastroGuide")
+    # set the image
+    st.image(IMAGE_ADDRESS, caption = 'IBS Disease Supporter')
 
-        # Assuming 'st.experimental_user' is a valid object with user details
-        user_email = st.experimental_user["email"]
-        user_name = st.experimental_user["name"]
-        
-        # set the title
-        st.title("GastroGuide")
-        # set the image
-        st.image(IMAGE_ADDRESS, caption = 'IBS Disease Supporter')
+    # Create tabs for login and data viewing
+    tabs = st.tabs(["Chat", "User Data"])
 
-        # Create tabs for login and data viewing
-        tabs = st.tabs(["Chat", "User Data"])
+    with tabs[0]:
+        st.subheader("Chat with Us 🤖")
 
-        with tabs[0]:
-            st.subheader("Chat with Us 🤖")
+        if "messages" not in st.session_state:
+            st.session_state.messages = []
 
-            if "messages" not in st.session_state:
-                st.session_state.messages = []
-
-            for message in st.session_state.messages:
-                with st.chat_message(message["role"]):
-                    st.markdown(message["content"])
+        for message in st.session_state.messages:
+            with st.chat_message(message["role"]):
+                st.markdown(message["content"])
 
             # input from the user
-            if prompt := st.chat_input("What is up?"):
-                st.session_state.messages.append({"role": "user", "content": prompt})
-                with st.chat_message("user"):
-                    st.markdown(prompt)
+        if prompt := st.chat_input("What is up?"):
+            st.session_state.messages.append({"role": "user", "content": prompt})
+            with st.chat_message("user"):
+                st.markdown(prompt)
 
                 # content manager for displaying appropriate message
-                with st.chat_message("assistant"):
-                    message_list = message_creator(st.session_state.messages)
-                    print("Message List", message_list)
-                    response = st.write_stream(graph_streamer(message_list))
+            with st.chat_message("assistant"):
+                message_list = message_creator(st.session_state.messages)
+                print("Message List", message_list)
+                response = st.write_stream(graph_streamer(message_list))
                 st.session_state.messages.append({"role": "assistant", "content": response})
 
-                # Assuming user_email and user_name are set correctly in session
-                update_user_document(db, user_email, user_name, prompt, response)
+            # Assuming user_email and user_name are set correctly in session
+            update_user_document(db, user_email, user_name, prompt, response)
 
-        with tabs[1]:   
-            st.subheader("Your Data")
-            if st.experimental_user.is_logged_in:
-                #email = st.experimental_user["email"]
-                display(db, user_email)
-            else:
-                st.warning("You must log in to access this tab.")
+    with tabs[1]:   
+        st.subheader("Your Data")
+        if st.experimental_user.is_logged_in:
+            #email = st.experimental_user["email"]
+            display(db, user_email)
+        else:
+            st.warning("You must log in to access this tab.")
+
+        
+    
+        
+        
 
 
+
+        
