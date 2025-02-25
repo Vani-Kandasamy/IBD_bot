@@ -92,7 +92,4 @@ def chat_bot():
             else:
                 st.warning("You must log in to access this tab.")
 
-    if __name__ == "__main__":
-        main_code()
-
 
