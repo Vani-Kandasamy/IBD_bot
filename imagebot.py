@@ -10,7 +10,7 @@ def image_bot():
     # title
     st.title("IBSee Guide")
     # image
-    st.image(IMAGE_ADDRESS, caption = "IBS Disease Helper")
+    #st.image(IMAGE_ADDRESS, caption = "IBS Disease Helper")
 
     # Upload image
     uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
