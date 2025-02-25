@@ -2,9 +2,6 @@ import pandas as pd
 import streamlit as st
 from datetime import datetime
 import authlib
-import 1_chatbot
-import 2_imagebot
-import 3_pdfbot
 
 from google_integration import get_google_cloud_credentials, get_user_details, update_user_document
 import pandas as pd 
@@ -17,7 +14,6 @@ st.title("IBD Control Helper")
 st.image(IMAGE_ADDRESS, caption = "IBD Nutrition Importance")
 
 if not st.experimental_user.is_logged_in:
-    st.warning("Please log in to access the services.")
     if st.sidebar.button("Log in with Google", type="primary", icon=":material/login:"):
         st.login()
 else:
@@ -26,18 +22,3 @@ else:
     
     if st.sidebar.button("Log out", type="secondary", icon=":material/logout:"):
         st.logout()
-
-with st.container():
-        tab1, tab2, tab3 = st.tabs(["Home", "Nutrition", "Profile"])
-
-        # Use imported display functions in each tab
-        with tab1:
-            home.display_home()
-
-        with tab2:
-            nutrition.display_nutrition()
-
-        with tab3:
-            profile.display_profile()
-
-
