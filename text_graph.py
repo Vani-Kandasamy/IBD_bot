@@ -82,7 +82,7 @@ def get_db(credentials):
 creds=set_up_credentials()
 db = get_db(creds)
 
-user_email = st.experimental_user.email
+user_email = st.user["email"]
 
 # Retrieve query logs for the user
 query_logs = get_user_field(db, user_email)
