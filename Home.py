@@ -64,7 +64,7 @@ def main():
         st.markdown(f"[Login with Auth0]({login_url})")
         #st.sidebar.button(f"[Login with Auth0]({login_url})")
 
-        if 'code' in st.query_params():
+        if 'code' in st.experimental_get_query_params():
             _, user_info = login_callback()
             st.session_state['user_info'] = user_info
 
