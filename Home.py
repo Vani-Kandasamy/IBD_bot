@@ -61,11 +61,12 @@ def main():
     # Example login URL (needs the correct application state and nonce handling in a real app)
     login_url = f"https://{AUTH0_DOMAIN}/authorize?response_type=code&client_id={AUTH0_CLIENT_ID}&redirect_uri={AUTH0_CALLBACK_URL}&scope=openid profile email&audience={API_AUDIENCE}"
 
+
     if 'user_info' not in st.session_state:
         st.warning("Please log in to access the services.")
         st.markdown(f"[Login with Auth0]({login_url})")   
         #st.sidebar.button(f"[Login with Auth0]({login_url})")
-        st.login()
+        #st.login()
 
         if 'code' in st.experimental_get_query_params():
             _, user_info = login_callback()
