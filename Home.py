@@ -26,9 +26,11 @@ st.title("IBD Control Helper")
 st.image(IMAGE_ADDRESS, caption = "IBD Nutrition Importance")
 
 def login_callback():
-    # This function should handle obtaining the access token and user info
     try:
-        # Fetching token
+        # Retrieve the authorization code from the URL
+        code = st.experimental_get_query_params().get('code')
+
+        # Exchange the authorization code for an access token
         token_url = f"https://{AUTH0_DOMAIN}/oauth/token"
         headers = {'content-type': 'application/x-www-form-urlencoded'}
         body = {
@@ -36,50 +38,49 @@ def login_callback():
             'client_id': AUTH0_CLIENT_ID,
             'client_secret': AUTH0_CLIENT_SECRET,
             'redirect_uri': AUTH0_CALLBACK_URL,
-            'code': st.experimental_get_query_params().get('code')
+            'code': code
         }
 
         response = requests.post(token_url, data=body, headers=headers)
+        response.raise_for_status()
         token_info = response.json()
 
-        # Fetch user info
+        # Retrieve user info with the access token
         userinfo_url = f"https://{AUTH0_DOMAIN}/userinfo"
         user_response = requests.get(userinfo_url, headers={'Authorization': f"Bearer {token_info['access_token']}"})
+        user_response.raise_for_status()
         user_info = user_response.json()
 
         return token_info, user_info
 
-    except Exception as e:
+    except requests.exceptions.RequestException as e:
         st.error(f"An error occurred during login: {e}")
         return None, None
 
 def main():
-
-    
     st.title("Streamlit App with Auth0 Authentication")
 
-    # Example login URL (needs the correct application state and nonce handling in a real app)
-    login_url = f"https://{AUTH0_DOMAIN}/authorize?response_type=code&client_id={AUTH0_CLIENT_ID}&redirect_uri={AUTH0_CALLBACK_URL}&scope=openid profile email&audience={API_AUDIENCE}"
-
+    # Auth0 login URL
+    login_url = (
+        f"https://{AUTH0_DOMAIN}/authorize"
+        f"?response_type=code&client_id={AUTH0_CLIENT_ID}"
+        f"&redirect_uri={AUTH0_CALLBACK_URL}&scope=openid profile email"
+        f"&audience={API_AUDIENCE}"
+    )
 
     if 'user_info' not in st.session_state:
-        st.warning("Please log in to access the services.")
-        st.markdown(f"[Login with Auth0]({login_url})")   
-        #st.sidebar.button(f"[Login with Auth0]({login_url})")
-        #st.login()
+        st.markdown(f"[Login with Auth0]({login_url})")
 
         if 'code' in st.experimental_get_query_params():
-            _, user_info = login_callback()
-            st.session_state['user_info'] = user_info
+            token_info, user_info = login_callback()
+            if user_info:
+                st.session_state['user_info'] = user_info
 
     if 'user_info' in st.session_state:
-        #st.html(f"Hello, <span style='color: orange; font-weight: bold;'>{st.experimental_user.name}</span>!")
         st.write("You are logged in!")
         st.write(st.session_state['user_info'])
-        st.button("Log out", on_click=lambda: st.session_state.clear())
-    
-        if st.sidebar.button("Log out", type="secondary", icon=":material/logout:"):
-            st.logout()
+
+        
 
         with st.container():
             tab1, tab2, tab3 = st.tabs(["ChatBot", "ImageBot", "PDFBot"])
@@ -94,7 +95,8 @@ def main():
             with tab3:
                 pdfbot.pdf_bot()
 
+        if st.button("Log out"):
+            st.session_state.clear()
+
 if __name__ == "__main__":
     main()
-
-
