@@ -63,7 +63,7 @@ def main():
         st.warning("Please log in to access the services.")
         #st.markdown(f"[Login with Auth0]({login_url})")
         if st.sidebar.button("Log in", type="primary", icon=":material/login:"):
-            st.login()
+            st.login(login_url)
         #st.sidebar.button(f"[Login with Auth0]({login_url})")
 
         if 'code' in st.experimental_get_query_params():
