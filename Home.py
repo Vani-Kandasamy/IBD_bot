@@ -54,6 +54,8 @@ def login_callback():
         return None, None
 
 def main():
+
+    
     st.title("Streamlit App with Auth0 Authentication")
 
     # Example login URL (needs the correct application state and nonce handling in a real app)
@@ -70,7 +72,10 @@ def main():
             st.session_state['user_info'] = user_info
 
     if 'user_info' in st.session_state:
-        st.html(f"Hello, <span style='color: orange; font-weight: bold;'>{st.experimental_user.name}</span>!")
+        #st.html(f"Hello, <span style='color: orange; font-weight: bold;'>{st.experimental_user.name}</span>!")
+        st.write("You are logged in!")
+        st.write(st.session_state['user_info'])
+        st.button("Log out", on_click=lambda: st.session_state.clear())
     
         if st.sidebar.button("Log out", type="secondary", icon=":material/logout:"):
             st.logout()
