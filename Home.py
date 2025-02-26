@@ -78,7 +78,7 @@ def main():
 
     if 'user_info' in st.session_state:
         st.write("You are logged in!")
-        st.write(st.session_state['user_info'])
+        #st.write(st.session_state['user_info'])
 
         
 
