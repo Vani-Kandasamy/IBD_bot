@@ -9,4 +9,3 @@ authlib
 google-cloud-firestore
 google-auth
 tabulate
-streamlit = 1.42.0
