@@ -63,8 +63,8 @@ def main():
 
     if 'user_info' not in st.session_state:
         st.warning("Please log in to access the services.")
-        #st.markdown(f"[Login with Auth0]({login_url})")   
-        st.sidebar.button(f"[Login with Auth0]({login_url})")
+        st.markdown(f"[Login with Auth0]({login_url})")   
+        #st.sidebar.button(f"[Login with Auth0]({login_url})")
         st.login()
 
         if 'code' in st.experimental_get_query_params():
